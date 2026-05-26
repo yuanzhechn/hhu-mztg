@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>《毛中特》课程期末练习题</title>
+    <meta name="description" content="本地版《毛中特》课程期末练习题：考点速览、章节刷题、错题本和考前速刷。" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="top-strip">
+      <span>校园公益工具 · 《毛中特》课程期末练习题</span>
+      <a href="https://maogai.szhopc.cn/" target="_blank" rel="noopener">原站 ↗</a>
+    </div>
+
+    <main class="page-shell">
+      <section class="hero-card">
+        <div class="hero-meta">
+          <p>2026-06-22 期末 · 一手公开资料 · 与河海MZT概论教研室公众号发布练习题一致</p>
+          <button class="small-ghost" id="guideBtn" type="button">使用教程</button>
+        </div>
+        <h1>《毛中特》课程期末练习题。<span id="heroCount">298 题刷完。</span></h1>
+        <button class="primary-cta" id="heroCta" type="button">开始刷题 · 第1章</button>
+      </section>
+
+      <nav class="mode-nav" aria-label="练习模式">
+        <button class="mode-button" type="button" data-mode="points">考点速览</button>
+        <button class="mode-button active" type="button" data-mode="practice">章节刷题</button>
+        <button class="mode-button" type="button" data-mode="wrong">错题本</button>
+        <button class="mode-button" type="button" data-mode="rush">考前速刷</button>
+      </nav>
+
+      <section class="mode-content" id="modeContent"></section>
+
+      <section class="about-card" id="about">
+        <div>
+          <p class="about-title">做适合自己复习节奏的本地题库</p>
+          <p class="about-copy">题库数据已保存在本文件夹，可离线打开；答题进度存在浏览器本地。</p>
+        </div>
+        <a href="https://feedback.szhopc.cn/maogai" target="_blank" rel="noopener">勘误 / 反馈</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>校园公益工具 · 本地复刻版</p>
+      <p>《毛中特》课程期末练习题 · 免费公益 · 内容来自一手公开资料</p>
+    </footer>
+
+    <div class="modal-layer hidden" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <div class="modal-card">
+        <button class="modal-close" id="guideClose" type="button" aria-label="关闭">×</button>
+        <p class="modal-step" id="guideStep">第 1 步 / 共 3 步</p>
+        <h2 id="guideTitle">章节刷题</h2>
+        <p id="guideText">按 8 章节顺序练习，答错的题自动收进错题本，不用手动标记。</p>
+        <div class="modal-actions">
+          <button class="small-ghost" id="guideSkip" type="button">知道了</button>
+          <button class="small-primary" id="guideNext" type="button">下一步</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./questions-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
