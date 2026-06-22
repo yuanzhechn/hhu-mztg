@@ -258,6 +258,15 @@ function renderMode() {
   if (state.mode === "rush") renderRushMode();
 }
 
+function renderStudyLayout(sidebar, main) {
+  return `
+    <div class="study-layout">
+      <aside class="study-sidebar">${sidebar}</aside>
+      <div class="study-main">${main}</div>
+    </div>
+  `;
+}
+
 function chapterTabs() {
   return `
     <div class="chapter-tabs" data-action="chapter-tabs">
@@ -271,12 +280,53 @@ function chapterTabs() {
   `;
 }
 
+function chapterSidebar(extra = "") {
+  return `
+    <section class="shell-card sidebar-card">
+      <p class="section-kicker">章节</p>
+      ${chapterTabs()}
+      ${extra}
+    </section>
+  `;
+}
+
+function wrongSidebar(questions) {
+  const groups = chapters.map((chapter) => {
+    const items = questions
+      .map((question, index) => ({ question, index }))
+      .filter((item) => item.question.chapterNumber === chapter.chapter);
+    return { chapter, items };
+  }).filter((group) => group.items.length);
+
+  return `
+    <section class="shell-card sidebar-card wrong-sidebar">
+      <p class="section-kicker">错题分章</p>
+      <div class="wrong-group-list">
+        ${groups.map(({ chapter, items }) => `
+          <section class="wrong-group">
+            <button class="wrong-group-head ${items.some((item) => item.index === state.wrongIndex) ? "active" : ""}" type="button" data-wrong-jump="${items[0].index}">
+              <strong>第${chapter.chapter}章</strong>
+              <span>${items.length} 题</span>
+            </button>
+            <div class="wrong-jump-grid">
+              ${items.map(({ index }) => `
+                <button class="jump-button ${index === state.wrongIndex ? "active wrong" : "wrong"}" type="button" data-wrong-jump="${index}">
+                  ${index + 1}
+                </button>
+              `).join("")}
+            </div>
+          </section>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderPointsMode() {
   const chapter = selectedChapter();
   els.modeContent.innerHTML = `
-    <div class="mode-stack">
-      ${chapterTabs()}
-      <section class="shell-card points-card">
+    ${renderStudyLayout(chapterSidebar(), `
+      <section class="shell-card points-card main-panel">
         <p class="section-kicker">第${chapter.chapter}章</p>
         <h2>${escapeHtml(chapter.title)}</h2>
         <div class="point-list">
@@ -292,7 +342,7 @@ function renderPointsMode() {
           }).join("")}
         </div>
       </section>
-    </div>
+    `)}
   `;
 }
 
@@ -306,18 +356,20 @@ function renderPracticeMode() {
   ensureActive(question);
 
   els.modeContent.innerHTML = `
-    <div class="mode-stack">
-      ${chapterTabs()}
+    ${renderStudyLayout(chapterSidebar(`
       ${stats.total > 0 ? `
-        <div class="stat-grid">
+        <div class="stat-grid sidebar-stats">
           <div class="stat-card"><strong>${questions.length}</strong><span>本章题量</span></div>
           <div class="stat-card"><strong>${stats.right}</strong><span>累计正确</span></div>
           <div class="stat-card"><strong>${stats.total}</strong><span>累计已答</span></div>
         </div>
       ` : ""}
       ${renderNavigator(questions, index, results)}
+    `), `
+      <div class="mode-stack main-stack">
       ${renderQuestionCard(question, `第${chapter.chapter}章 · ${index + 1}/${questions.length}`, "下一题")}
-    </div>
+      </div>
+    `)}
   `;
 }
 
@@ -339,16 +391,23 @@ function renderWrongMode() {
 
   ensureActive(question);
   els.modeContent.innerHTML = `
-    <div class="mode-stack">
+    ${renderStudyLayout(wrongSidebar(questions), `
+      <div class="mode-stack main-stack">
       <section class="shell-card wrong-head">
         <div>
           <p class="section-kicker">错题本</p>
-          <h2>当前 ${questions.length} 题</h2>
+          <h2>当前 ${state.wrongIndex + 1} / ${questions.length} 题</h2>
         </div>
-        <button class="danger-outline" type="button" data-action="clear-wrong">清空错题</button>
+        <div class="wrong-actions">
+          <button class="small-ghost" type="button" data-action="prev-question">上一题</button>
+          <button class="small-primary" type="button" data-action="next-question">下一题</button>
+          <button class="small-ghost" type="button" data-action="remove-wrong">移出本题</button>
+          <button class="danger-outline" type="button" data-action="clear-wrong">清空错题</button>
+        </div>
       </section>
       ${renderQuestionCard(question, `错题复习 · ${state.wrongIndex + 1}/${questions.length} · 第${question.chapterNumber}章`, "下一题", true)}
-    </div>
+      </div>
+    `)}
   `;
 }
 
@@ -514,6 +573,24 @@ function goNext() {
   render();
 }
 
+function goPrev() {
+  if (state.mode === "practice") {
+    const chapter = selectedChapter();
+    const questions = selectedChapterQuestions();
+    const index = currentPracticeIndex(questions);
+    state.practiceIndex[chapter.chapter] = (index - 1 + Math.max(questions.length, 1)) % Math.max(questions.length, 1);
+  } else if (state.mode === "wrong") {
+    const questions = wrongQuestions();
+    state.wrongIndex = (state.wrongIndex - 1 + Math.max(questions.length, 1)) % Math.max(questions.length, 1);
+  } else if (state.mode === "rush") {
+    const questions = rushQuestions();
+    state.rushIndex = (state.rushIndex - 1 + Math.max(questions.length, 1)) % Math.max(questions.length, 1);
+  }
+  resetActive();
+  saveState();
+  render();
+}
+
 function showGuide(startIndex = 0) {
   guideIndex = startIndex;
   renderGuide();
@@ -581,6 +658,15 @@ els.modeContent.addEventListener("click", (event) => {
     return;
   }
 
+  const wrongJumpButton = event.target.closest("button[data-wrong-jump]");
+  if (wrongJumpButton) {
+    state.wrongIndex = Number(wrongJumpButton.dataset.wrongJump);
+    resetActive();
+    saveState();
+    render();
+    return;
+  }
+
   const rushButton = event.target.closest("button[data-rush]");
   if (rushButton) {
     state.rushMode = rushButton.dataset.rush;
@@ -598,6 +684,7 @@ els.modeContent.addEventListener("click", (event) => {
       const question = currentQuestion();
       if (question && activeSelected.length) finishAnswer(question, activeSelected);
     }
+    if (action === "prev-question") goPrev();
     if (action === "next-question") goNext();
     if (action === "remove-wrong") {
       const question = currentQuestion();

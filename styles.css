@@ -98,7 +98,7 @@ h3 {
 }
 
 .page-shell {
-  width: min(64rem, 100%);
+  width: min(76rem, 100%);
   margin: 0 auto;
   padding: 24px 16px calc(16px + env(safe-area-inset-bottom));
 }
@@ -276,6 +276,94 @@ h3 {
 .mode-stack {
   display: grid;
   gap: 16px;
+}
+
+.study-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.study-sidebar,
+.study-main {
+  min-width: 0;
+}
+
+.main-stack,
+.main-panel {
+  width: min(46rem, 100%);
+  margin: 0 auto;
+}
+
+.sidebar-card {
+  padding: 14px;
+}
+
+.sidebar-card .chapter-tabs {
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.sidebar-stats {
+  margin-top: 14px;
+}
+
+.sidebar-card .question-navigator {
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.wrong-group-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wrong-group {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+  background: var(--paper);
+}
+
+.wrong-group-head {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 0 8px;
+  background: var(--paper-sink);
+  color: var(--ink);
+  text-align: left;
+}
+
+.wrong-group-head.active {
+  background: var(--indigo);
+  color: var(--paper);
+}
+
+.wrong-group-head strong {
+  font-family: var(--serif);
+  font-size: 14px;
+}
+
+.wrong-group-head span {
+  color: currentColor;
+  font-size: 12px;
+  opacity: 0.78;
+}
+
+.wrong-jump-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
 }
 
 .chapter-tabs {
@@ -690,6 +778,13 @@ h3 {
   padding: 16px;
 }
 
+.wrong-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .rush-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -877,14 +972,262 @@ h3 {
   }
 }
 
+@media (min-width: 900px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  .page-shell {
+    display: grid;
+    width: 100%;
+    height: calc(100vh - 40px);
+    grid-template-columns: clamp(28rem, 38vw, 34rem) minmax(0, 1fr);
+    gap: 0;
+    align-items: start;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .hero-card {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 10px 8px 0 10px;
+    padding: 10px 12px;
+  }
+
+  .hero-card h1 {
+    margin-top: 6px;
+    font-size: 21px;
+    line-height: 1.18;
+  }
+
+  .hero-card h1 span {
+    display: block;
+    margin-top: 4px;
+    white-space: normal;
+  }
+
+  .hero-meta {
+    display: grid;
+    gap: 6px;
+  }
+
+  .hero-meta p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .hero-meta .small-ghost {
+    width: 100%;
+    min-height: 32px;
+  }
+
+  .primary-cta {
+    width: 100%;
+    min-height: 36px;
+    margin-top: 8px;
+  }
+
+  .mode-nav {
+    position: static;
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 8px 8px 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 6px;
+  }
+
+  .mode-button {
+    min-height: 34px;
+    justify-content: center;
+  }
+
+  .mode-content {
+    display: contents;
+    margin-top: 0;
+    animation: none;
+  }
+
+  .study-layout {
+    display: contents;
+  }
+
+  .study-sidebar {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 8px 8px 0 10px;
+    overflow: hidden;
+  }
+
+  .study-main,
+  .mode-content > .mode-stack,
+  .mode-content > .shell-card {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    min-width: 0;
+    height: calc(100vh - 40px);
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 10px 10px 0;
+  }
+
+  .main-stack,
+  .main-panel {
+    width: 100%;
+    margin: 0;
+  }
+
+  .question-card-body {
+    padding: 14px 16px;
+  }
+
+  .question-title {
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .option-list {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .answer-button {
+    padding: 10px 14px;
+    line-height: 1.55;
+  }
+
+  .study-sidebar .chapter-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin: 8px 0 0;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .study-sidebar .chapter-tab {
+    min-width: 0;
+    padding: 7px 8px;
+  }
+
+  .study-sidebar .chapter-tab span {
+    max-width: none;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .study-sidebar .chapter-tab strong {
+    font-size: 14px;
+  }
+
+  .study-sidebar .stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .study-sidebar .stat-card {
+    padding: 6px;
+  }
+
+  .study-sidebar .stat-card strong {
+    font-size: 17px;
+  }
+
+  .study-sidebar .question-navigator {
+    margin-top: 8px;
+  }
+
+  .study-sidebar .navigator-head {
+    display: block;
+  }
+
+  .study-sidebar .navigator-head h2 {
+    font-size: 15px;
+  }
+
+  .study-sidebar .navigator-status {
+    margin-top: 4px;
+    text-align: left;
+  }
+
+  .study-sidebar .legend-row {
+    gap: 7px;
+    margin-top: 8px;
+  }
+
+  .study-sidebar .jump-grid {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .study-sidebar .jump-button {
+    min-height: 26px;
+    border-radius: 7px;
+    font-size: 12px;
+  }
+
+  .wrong-group-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .wrong-group {
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .wrong-group-head {
+    min-height: 28px;
+    padding: 0 6px;
+  }
+
+  .wrong-group-head strong {
+    font-size: 13px;
+  }
+
+  .wrong-jump-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .wrong-jump-grid .jump-button {
+    min-height: 22px;
+    padding: 0 2px;
+    font-size: 11px;
+  }
+
+  .wrong-jump-grid .jump-button::after {
+    display: none;
+  }
+
+  .about-card {
+    grid-column: 2;
+    margin-top: 0;
+  }
+}
+
 @media (min-width: 1024px) {
   .page-shell {
-    padding-right: 32px;
-    padding-left: 32px;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .chapter-tabs {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .study-sidebar .chapter-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .jump-grid {
@@ -915,6 +1258,11 @@ h3 {
   .small-ghost,
   .danger-outline {
     width: 100%;
+  }
+
+  .wrong-actions {
+    width: 100%;
+    flex-direction: column;
   }
 
   .rush-grid,
